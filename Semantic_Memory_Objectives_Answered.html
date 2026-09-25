@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semantic Memory Answers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f1; --card:#ffffff; --line:#e8e1d3; --gold:#c9a96e; --dgold:#a8854a; --pgold:#f6eedd;
+  --navy:#34466b; --ink:#2f3542; --muted:#6b7280;
+  --blue:#e3ecf7; --rose:#f7e4e4; --green:#e2f1e6; --lav:#ece6f6; --peach:#fbe9d9;
+  --ok:#2f8a57; --bad:#c0392b; --r:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.6}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',Georgia,serif;color:var(--navy);line-height:1.2;margin:0 0 .4em}
+h1{font-size:2.5rem} h2{font-size:2.1rem} h3{font-size:1.5rem;margin-top:1.4em} h4{font-size:1.2rem}
+a{color:var(--dgold)}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+/* sidebar */
+.side{position:sticky;top:0;height:100vh;background:#fffdf8;border-right:1px solid var(--line);padding:26px 18px;display:flex;flex-direction:column;gap:10px}
+.brand{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:var(--navy);font-weight:700;line-height:1.15;margin-bottom:14px}
+.brand small{display:block;font-family:'DM Sans';font-size:.75rem;color:var(--dgold);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.navbtn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:1px solid transparent;border-radius:12px;background:transparent;font:inherit;font-weight:500;color:var(--navy);cursor:pointer;text-align:left}
+.navbtn:hover{background:var(--pgold)}
+.navbtn.active{background:var(--pgold);border-color:var(--gold);font-weight:700}
+.side .foot{margin-top:auto;font-size:.85rem;color:var(--muted)}
+.side .foot b{color:var(--navy);font-family:'Cormorant Garamond',serif;font-size:1.15rem}
+.pbar{height:9px;background:var(--line);border-radius:9px;overflow:hidden;margin:8px 0 4px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--dgold));transition:width .4s}
+main{padding:34px 42px 80px;max-width:1180px;width:100%;min-width:0}
+.panel{display:none} .panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px 26px;margin:18px 0;box-shadow:0 1px 2px rgba(52,70,107,.04)}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dgold);font-weight:700}
+.sub{color:var(--muted);font-size:1.05rem;margin-top:-4px}
+/* overview */
+.note{background:var(--pgold);border:1px solid var(--gold);border-radius:var(--r);padding:24px 28px}
+.note p{margin:.5em 0}
+.note .sig{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--dgold);font-style:italic}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:18px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+.stat b{display:block;font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--navy);line-height:1}
+.stat span{font-size:.82rem;color:var(--muted)}
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:12px 0;font-size:.93rem;background:#fff}
+th{background:var(--navy);color:#fff;text-align:left;padding:10px 12px;font-weight:700}
+td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#fcfaf5}
+td:first-child{font-weight:700;color:var(--navy)}
+.tbl-wrap{overflow-x:auto}
+/* timeline */
+.tl{position:relative;overflow-x:auto;padding:10px 4px 6px}
+.tl-track{position:relative;display:flex;gap:0;min-width:900px;padding-top:44px}
+.tl-track:before{content:"";position:absolute;left:10px;right:10px;top:62px;height:3px;background:linear-gradient(90deg,var(--gold),var(--dgold));border-radius:3px}
+.tl-pt{flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;background:none;border:0;font:inherit;padding:0 2px}
+.tl-pt .yr{position:relative;top:-40px;font-weight:700;color:var(--navy);font-size:.9rem}
+.tl-pt .dot{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--gold);margin-top:-30px;transition:.2s}
+.tl-pt .who{font-size:.74rem;color:var(--muted);margin-top:8px;text-align:center;line-height:1.25}
+.tl-pt.on .dot,.tl-pt:hover .dot{background:var(--dgold);transform:scale(1.25)}
+.tl-info{margin-top:14px;background:var(--blue);border-radius:14px;padding:14px 18px;min-height:64px}
+/* lesson tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.tile{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;cursor:pointer;text-align:left;font:inherit;transition:.2s}
+.tile:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 16px rgba(168,133,74,.12)}
+.tile .te{font-size:1.8rem}
+.tile .tn{font-size:.7rem;letter-spacing:.12em;color:var(--dgold);font-weight:700;margin-top:4px}
+.tile .tt{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--navy);line-height:1.15;margin:3px 0}
+.tile .ts{font-size:.82rem;color:var(--muted);line-height:1.35}
+.tile .tick{position:absolute;top:10px;right:12px;width:24px;height:24px;border-radius:50%;background:var(--ok);color:#fff;font-size:.8rem;display:none;align-items:center;justify-content:center;font-weight:700}
+.tile.done .tick{display:flex}
+.tile.done{background:#fbfefc;border-color:#b9dcc6}
+.partlabel{grid-column:1/-1;font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--dgold);font-weight:700;margin-top:6px}
+/* lessons */
+.pills{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:7px;position:sticky;top:0;background:var(--bg);padding:10px 0 12px;z-index:5;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.pill{flex:0 0 auto;white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--navy)}
+.pill.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pill.seen:not(.on){background:var(--green);border-color:#b9dcc6}
+.lesson{display:none} .lesson.on{display:block}
+.lesson h2 .em{margin-right:8px}
+.lgrid{display:grid;grid-template-columns:3fr 2fr;gap:22px;align-items:start;margin:18px 0}
+.diagram{margin:0;background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}
+.diagram svg{width:100%;height:auto;display:block}
+.points{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.points li{background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px 11px 46px;position:relative;font-size:.95rem;line-height:1.45}
+.points li .ic{position:absolute;left:13px;top:10px;font-size:1.2rem}
+.hook{background:var(--lav);border-radius:14px;padding:13px 18px;margin:12px 0}
+.friend{background:var(--green);border-radius:14px;padding:13px 18px;margin:12px 0}
+.key{background:var(--pgold);border:2px solid var(--gold);border-radius:16px;padding:16px 20px;margin:16px 0;font-size:1.06rem}
+.key:before{content:"★ KEY INSIGHT";display:block;font-size:.75rem;letter-spacing:.14em;font-weight:700;color:var(--dgold);margin-bottom:4px}
+.debate{background:var(--rose);border-radius:14px;padding:13px 18px;margin:12px 0}
+.bg{font-size:.72rem;background:var(--blue);color:var(--navy);border-radius:6px;padding:1px 7px;font-weight:700;vertical-align:middle;white-space:nowrap}
+.demo{background:var(--blue);border:1px dashed #9fb6d6;border-radius:18px;padding:20px 22px;margin:18px 0}
+.demo h4{margin-top:0}
+.btn{border:1px solid var(--gold);background:#fff;color:var(--navy);border-radius:10px;padding:8px 14px;font:inherit;font-size:.9rem;cursor:pointer;font-weight:500}
+.btn:hover{background:var(--pgold)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:#26375a}
+.btn.sel{background:var(--navy);color:#fff}
+.watch{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0}
+.watch a{display:inline-flex;gap:6px;align-items:center;text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.88rem;color:var(--navy)}
+.watch a:hover{border-color:var(--gold);background:var(--pgold)}
+.check details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin:8px 0}
+.check summary{cursor:pointer;font-weight:700;color:var(--navy)}
+.check details p{margin:.6em 0 0;background:var(--peach);border-radius:10px;padding:10px 14px}
+.lnav{display:flex;justify-content:space-between;gap:10px;margin-top:26px;border-top:1px solid var(--line);padding-top:18px}
+.fb{margin-top:10px;padding:10px 14px;border-radius:10px;background:#fff;display:none}
+.fb.show{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.dragrow{display:flex;flex-direction:column;gap:6px;max-width:360px}
+.dragitem{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.dragitem .n{width:22px;color:var(--dgold);font-weight:700}
+.dragitem .lab{flex:1}
+.dragitem button{border:1px solid var(--line);background:var(--pgold);border-radius:6px;cursor:pointer;width:28px;height:26px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.vote{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:#fff;border-radius:10px;padding:8px 12px;margin:6px 0;border:1px solid var(--line)}
+.vote .opts{display:flex;gap:6px}
+/* flashcards */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:16px}
+.fc{perspective:1000px;height:210px;cursor:pointer}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:18px;display:flex;flex-direction:column;border:1px solid var(--line)}
+.fc-f{background:#fff}
+.fc-f .q{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--navy);font-weight:700;margin:auto 0;line-height:1.2}
+.fc-f .tp{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dgold);font-weight:700}
+.fc-f .hint{font-size:.72rem;color:var(--muted)}
+.fc-b{background:var(--pgold);transform:rotateY(180deg);font-size:.9rem;line-height:1.45;overflow:auto;border-color:var(--gold)}
+/* mcq */
+.scorebar{position:sticky;top:0;z-index:6;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.scorebar .pbar{flex:1;min-width:120px}
+.mcq{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:14px 0}
+.mcq .qn{font-size:.72rem;letter-spacing:.12em;color:var(--dgold);font-weight:700}
+.mcq .qt{font-weight:700;color:var(--navy);margin:4px 0 10px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:#fcfaf5;font:inherit;cursor:pointer;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--gold);background:var(--pgold)}
+.opt:disabled{cursor:default}
+.opt.right{background:#dff1e5;border-color:var(--ok);color:#1d5c39;font-weight:700}
+.opt.wrong{background:#f8dcd8;border-color:var(--bad);color:#8a2a1f}
+.expl{display:none;margin-top:10px;background:var(--blue);border-radius:10px;padding:10px 14px;font-size:.93rem}
+.mcq.done .expl{display:block}
+.final{display:none;text-align:center;background:var(--pgold);border:2px solid var(--gold);border-radius:18px;padding:26px}
+.final b{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--navy)}
+/* svg text classes */
+svg text{font-family:'DM Sans',sans-serif}
+.sv-h{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:22px;fill:#34466b}
+.sv-t{font-size:13px;fill:#2f3542}
+.sv-s{font-size:11.5px;fill:#6b7280}
+.sv-b{font-size:13px;font-weight:700;fill:#34466b}
+.sv-g{font-size:12px;fill:#a8854a;font-weight:700}
+.model{background:#fff;border:2px solid var(--gold);border-radius:16px;padding:16px 20px;margin:16px 0}
+.model:before{content:"✍️ MODEL ANSWER";display:block;font-size:.75rem;letter-spacing:.14em;font-weight:700;color:var(--dgold);margin-bottom:6px}
+.plainw{background:var(--blue);border-radius:14px;padding:13px 18px;margin:12px 0}
+.lost{background:var(--rose);border-radius:14px;padding:12px 18px;margin:12px 0}
+.lost ul{margin:.3em 0 0;padding-left:1.2em}
+textarea,input[type=text]{width:100%;font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff}
+.slider{width:100%;accent-color:#a8854a}
+.mini{font-size:.85rem;color:var(--muted)}
+.tag{display:inline-block;border-radius:999px;padding:2px 10px;margin:2px;font-size:.85rem;background:#fff;border:1px solid var(--line)}
+.tag.bad{background:var(--rose);border-color:#e0b4b4;text-decoration:line-through}
+.tag.ok{background:var(--green);border-color:#b9dcc6}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:sticky;top:0;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:10px 12px;gap:6px;z-index:20;border-right:0;border-bottom:1px solid var(--line)}
+  .brand{display:none}
+  .navbtn{width:auto;padding:7px 10px;font-size:.85rem}
+  .side .foot{margin:0;flex-basis:100%;font-size:.75rem;display:flex;align-items:center;gap:10px}
+  .side .foot b{font-size:.95rem;white-space:nowrap}
+  .side .foot .pbar{flex:1;margin:0}
+  .side .foot .ptxt{white-space:nowrap}
+  main{padding:18px 16px 60px}
+  .lgrid,.two{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .pills{position:static}
+  h1{font-size:2rem} h2{font-size:1.7rem}
+}
+</style>
+</head>
+<style>
+.page{max-width:1120px;margin:0 auto;padding:34px 28px 80px}
+.topnav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 0;display:flex;flex-wrap:wrap;gap:6px}
+.topnav a{text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:.85rem;color:var(--navy)}
+.topnav a.part{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:700}
+.partH{margin:48px 0 8px;padding:18px 22px;border-radius:18px;background:var(--pgold);border:1px solid var(--gold)}
+.partH h2{margin:0}
+.obj{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px 28px;margin:22px 0;scroll-margin-top:70px}
+.objtag{display:inline-block;background:var(--navy);color:#fff;border-radius:10px;padding:3px 12px;font-weight:700;font-size:.85rem;letter-spacing:.06em}
+.obj h3.q{font-size:1.9rem;margin:.4em 0 .1em}
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.toc div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.toc a{display:block;color:var(--navy);text-decoration:none;margin:4px 0;font-size:.95rem}
+.toc a:hover{color:var(--dgold)}
+.toc b{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--dgold)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:900px){.toc,.two-col{grid-template-columns:1fr}.page{padding:18px 16px 60px}.obj{padding:18px 16px}.obj h3.q{font-size:1.5rem}}
+@media print{.topnav{display:none}.obj{break-inside:avoid-page}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><marker id="ah1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a8854a"/></marker><marker id="ahR" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ahN" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#34466b"/></marker></defs></svg>
+<div class="page">
+<div class="eyebrow">Cognitive Psychology · Theme 4 · Semantic memory · Prepared for Sezen</div>
+<h1>Learning objectives A–B–C, answered</h1>
+<p class="sub">All nine objectives on one page, in order. Each one has the question, what it really asks, a full exam answer, a whiteboard diagram with the key points, and where marks are lost.</p>
+<nav class="topnav"><a class="part" href="#partA">A</a><a href="#A1">A1</a><a href="#A2">A2</a><a href="#A3">A3</a><a href="#A4">A4</a><a class="part" href="#partB">B</a><a href="#B1">B1</a><a href="#B2">B2</a><a href="#B3">B3</a><a class="part" href="#partC">C</a><a href="#C1">C1</a><a href="#C2">C2</a><a href="#synth">Synthesis</a></nav>
+<div class="toc"><div><b>A. Categories and concepts</b><a href="#A1">A1. How is semantic knowledge organised in memory?</a><a href="#A2">A2. How are individual categories represented in memory?</a><a href="#A3">A3. What are the (dis)advantages of the different views?</a><a href="#A4">A4. How do the different views explain the typicality effect?</a></div><div><b>B. Networks and concepts</b><a href="#B1">B1. How is semantic knowledge organised in memory?</a><a href="#B2">B2. What is the role of similarity in knowledge retrieval?</a><a href="#B3">B3. How do network models explain typicality and semantic priming?</a></div><div><b>C. Semantic dementia</b><a href="#C1">C1. What is semantic dementia?</a><a href="#C2">C2. What can we learn from semantic dementia about semantic memory?</a></div></div>
+<div class="note" style="margin-top:10px"><p><b>How to use this page:</b> read the question, try to answer it out loud, then read the <b>✍️ Answer</b>. The diagram and five points underneath are your memory aid; the red box shows what examiners deduct for. Items marked <span class="bg">background</span> are not on your assigned pages; <span class="bg">illustrative</span> numbers only show the idea.</p></div>
+<section class="partH" id="partA"><div class="eyebrow">Part A · Murphy — NOBA “Categories and Concepts”</div><h2>A. Categories and concepts</h2></section>
+<article class="obj" id="A1"><span class="objtag">Objective A1</span>
+<h3 class="q">How is semantic knowledge organised in memory?</h3>
+<p class="sub">Murphy’s answer: in categories that are fuzzy, graded, nested in hierarchies, and tied into our knowledge of the world.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> according to Murphy, what does the “filing system” of knowledge look like — what are its structural properties?</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">According to Murphy, semantic knowledge is organised into <b>categories</b>, represented mentally as <b>concepts</b>, which allow us to generalise what we know to new objects. First, categories are <b>not well defined</b>: for most categories no set of necessary and jointly sufficient features exists, and membership forms a continuum — Hampton (1979) found items that were just in or just out (sinks, sponges), and McCloskey and Glucksberg (1978) found people changed their own judgments of borderline items up to 22% of the time. Second, categories have a <b>graded internal structure</b>: some members are more typical than others (Rosch, 1973), because they share more features with other members and fewer with other categories (family resemblance; Rosch &amp; Mervis, 1975). Third, categories are organised in <b>hierarchies</b> (superordinate, basic, subordinate) with a preferred <b>basic level</b> that is named, learned and identified most readily (Rosch et al., 1976: 1,595 basic vs 14 subordinate vs 1 superordinate names). The basic level is the most differentiated level, but it shifts with expertise and culture. Finally, concepts are <b>embedded in world knowledge</b>: coherent concepts are learned faster (Murphy &amp; Allopenna, 1994), and people often believe natural kinds have hidden essences (Keil, 1989).</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Four organising principles of categories" role="img" viewbox="0 0 600 500">
+<defs><lineargradient id="gA1" x1="0" x2="1"><stop offset="0" stop-color="#f3c9c9"></stop><stop offset=".5" stop-color="#f6eedd"></stop><stop offset="1" stop-color="#bfe3cb"></stop></lineargradient></defs>
+<text class="sv-h" x="20" y="30">Four organising principles</text>
+<!-- 1 fuzzy -->
+<rect fill="#fff" height="196" rx="14" stroke="#e8e1d3" width="276" x="20" y="46"></rect>
+<text class="sv-b" x="34" y="70">① Fuzzy boundaries</text>
+<rect fill="url(#gA1)" height="22" rx="11" width="248" x="34" y="88"></rect>
+<line stroke="#a8854a" stroke-dasharray="4 3" stroke-width="2" x1="158" x2="158" y1="82" y2="118"></line>
+<circle cx="142" cy="99" fill="#fff" r="6" stroke="#34466b" stroke-width="2"></circle><circle cx="174" cy="99" fill="#fff" r="6" stroke="#34466b" stroke-width="2"></circle>
+<text class="sv-s" text-anchor="middle" x="130" y="134">🧽 sponge: just out</text>
+<text class="sv-s" text-anchor="middle" x="188" y="152">🚰 sink: just in</text>
+<text class="sv-t" x="34" y="182">Hampton (1979): a continuum</text>
+<text class="sv-t" x="34" y="202">Same people change their mind</text>
+<text class="sv-t" x="34" y="220">up to <tspan font-weight="700">22%</tspan> (McCloskey &amp; Glucksberg)</text>
+<!-- 2 typicality -->
+<rect fill="#fff" height="196" rx="14" stroke="#e8e1d3" width="276" x="304" y="46"></rect>
+<text class="sv-b" x="318" y="70">② Graded typicality</text>
+<circle cx="400" cy="156" fill="#f7e4e4" r="70"></circle><circle cx="400" cy="156" fill="#fbe9d9" r="46"></circle><circle cx="400" cy="156" fill="#e2f1e6" r="22"></circle>
+<text font-size="15" text-anchor="middle" x="400" y="161">🐦</text>
+<text font-size="15" text-anchor="middle" x="400" y="104">🦅</text>
+<text font-size="15" x="345" y="208">🐧</text>
+<text class="sv-t" x="482" y="120">robin =</text><text class="sv-t" x="482" y="138">prototype</text>
+<text class="sv-t" x="482" y="170">penguin =</text><text class="sv-t" x="482" y="188">atypical</text>
+<text class="sv-s" x="482" y="218">Rosch (1973)</text>
+<!-- 3 hierarchy -->
+<rect fill="#fff" height="196" rx="14" stroke="#e8e1d3" width="276" x="20" y="252"></rect>
+<text class="sv-b" x="34" y="276">③ Hierarchies + basic level</text>
+<rect fill="#e3ecf7" height="36" rx="8" width="160" x="34" y="290"></rect><text class="sv-t" x="46" y="313">animal</text><text class="sv-s" text-anchor="end" x="186" y="313">1 name</text>
+<rect fill="#f6eedd" height="36" rx="8" stroke="#c9a96e" stroke-width="2" width="160" x="34" y="334"></rect><text class="sv-b" x="46" y="357">bear ★</text><text class="sv-s" text-anchor="end" x="186" y="357">1,595</text>
+<rect fill="#ece6f6" height="36" rx="8" width="160" x="34" y="378"></rect><text class="sv-t" x="46" y="401">brown bear</text><text class="sv-s" text-anchor="end" x="186" y="401">14</text>
+<text class="sv-s" x="206" y="312">Rosch et al.</text><text class="sv-s" x="206" y="328">(1976)</text>
+<text class="sv-s" x="206" y="358">most</text><text class="sv-s" x="206" y="374">differentiated</text>
+<text class="sv-s" x="34" y="436">experts &amp; culture shift the level</text>
+<!-- 4 knowledge -->
+<rect fill="#fff" height="196" rx="14" stroke="#e8e1d3" width="276" x="304" y="252"></rect>
+<text class="sv-b" x="318" y="276">④ Embedded in knowledge</text>
+<g stroke="#34466b" stroke-width="1.8"><line x1="360" x2="440" y1="316" y2="316"></line><line x1="360" x2="400" y1="316" y2="362"></line><line x1="440" x2="400" y1="316" y2="362"></line></g>
+<g class="sv-s"><rect fill="#e3ecf7" height="22" rx="11" width="84" x="318" y="304"></rect><text text-anchor="middle" x="360" y="319">under water</text>
+<rect fill="#e3ecf7" height="22" rx="11" width="80" x="410" y="304"></rect><text text-anchor="middle" x="450" y="319">submarine</text>
+<rect fill="#e3ecf7" height="22" rx="11" width="84" x="358" y="352"></rect><text text-anchor="middle" x="400" y="367">divers</text></g>
+<text class="sv-t" x="500" y="320">donker:</text><text class="sv-t" x="500" y="338">coherent</text><text class="sv-b" style="fill:#2f8a57" x="500" y="356">fast</text>
+<text class="sv-t" x="318" y="406">Murphy &amp; Allopenna (1994);</text>
+<text class="sv-t" x="318" y="426">essentialism (Keil, 1989)</text>
+<rect fill="#f6eedd" height="36" rx="10" stroke="#c9a96e" width="560" x="20" y="458"></rect>
+<text class="sv-t" x="34" y="481">Concepts = mental representations of categories → they let us generalise to new things</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">🌫️</span><b>Fuzzy:</b> no definitions; membership is a continuum and even individuals are inconsistent (Hampton, 1979; McCloskey &amp; Glucksberg, 1978).</li>
+<li><span class="ic">🎯</span><b>Graded:</b> typicality — members differ in goodness; explained by family resemblance (Rosch &amp; Mervis, 1975).</li>
+<li><span class="ic">🪜</span><b>Hierarchical:</b> nested levels with a preferred <b>basic level</b> (1,595 vs 14 vs 1 names; Rosch et al., 1976), shifted by expertise and culture.</li>
+<li><span class="ic">🧩</span><b>Knowledge-based:</b> concepts fit our world knowledge (donker vs blegdav) and beliefs about essences.</li>
+<li><span class="ic">🔭</span><b>Function:</b> concepts let us extend knowledge from a few objects to an unlimited number of new ones.</li>
+</ul>
+</div>
+<div class="key">Semantic knowledge is organised into categories that are fuzzy, graded by typicality, nested in hierarchies with a preferred basic level, and embedded in our broader knowledge of the world.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> <b>F-G-H-K</b> — <i>Fuzzy, Graded, Hierarchical, Knowledge-based</i>.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “We sort knowledge into categories, but they have blurry edges, some members are better examples than others, they’re stacked in levels where we prefer the middle one (‘chair’), and they only make sense against everything else we know about the world.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Listing only “categories and hierarchies” — include fuzziness, typicality and knowledge.</li><li>Giving no study for a claim; each principle has a named study with a result.</li></ul></div>
+</article>
+<article class="obj" id="A2"><span class="objtag">Objective A2</span>
+<h3 class="q">How are individual categories represented in memory?</h3>
+<p class="sub">Four answers — and the current view that we probably use several of them.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> when you know what a “bird” is, what exactly is stored in your head — a rule, an average, a set of examples, or a theory?</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">Four views have been proposed. The <b>classical view</b> represents a category as a definition: a set of necessary and jointly sufficient features, so membership is all-or-none. It fails for most natural categories. The <b>prototype view</b> (Smith &amp; Medin, 1981) holds that we store a summary representation — a list of features weighted by their frequency in the category — and classify a new item by how well it matches this summary; Posner, Goldsmith and Welton (1967) showed that people abstract such a prototype, falsely “recognising” a dot pattern they had never seen. The <b>exemplar view</b> (Medin &amp; Schaffer, 1978) denies any summary: a concept is the set of remembered examples, and a new item is assigned to the category whose exemplars it is most similar to overall; Allen and Brooks (1991) showed that similarity to a remembered item can override an explicitly taught rule. Finally, the <b>knowledge / essentialist approach</b> treats concepts as theories: we learn concepts that fit our knowledge more easily (Murphy &amp; Allopenna, 1994) and believe natural kinds have hidden essences (Keil, 1989; Rips, 1989). Most researchers now conclude that concepts are represented through <b>multiple systems</b> — general descriptions, exemplar memories, rules and knowledge — possibly supported by different neural structures (Maddox &amp; Ashby, 2004), and people use prototypes or exemplars depending on circumstances (Malt, 1989).</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Four views of category representation" role="img" viewbox="0 0 600 490">
+<text class="sv-h" x="20" y="30">Four ways to store BIRD</text>
+<g>
+<rect fill="#e3ecf7" height="350" rx="14" stroke="#9fb6d6" width="136" x="20" y="46"></rect>
+<rect fill="#f6eedd" height="350" rx="14" stroke="#c9a96e" width="136" x="164" y="46"></rect>
+<rect fill="#e2f1e6" height="350" rx="14" stroke="#a9d3b7" width="136" x="308" y="46"></rect>
+<rect fill="#ece6f6" height="350" rx="14" stroke="#b7a6d6" width="128" x="452" y="46"></rect>
+</g>
+<g class="sv-b" text-anchor="middle"><text x="88" y="72">📏 Classical</text><text x="232" y="72">⭐ Prototype</text><text x="376" y="72">🗂️ Exemplar</text><text x="516" y="72">🧬 Knowledge</text></g>
+<!-- icons -->
+<rect fill="#fff" height="80" rx="4" stroke="#34466b" stroke-width="2" width="84" x="46" y="92"></rect>
+<g class="sv-s"><text x="54" y="112">☑ feathers</text><text x="54" y="134">☑ lays eggs</text><text x="54" y="156">☑ flies</text></g>
+<g><rect fill="#c9a96e" height="10" rx="5" width="100" x="182" y="96"></rect><rect fill="#c9a96e" height="10" rx="5" width="92" x="182" y="116"></rect><rect fill="#e3cfa7" height="10" rx="5" width="66" x="182" y="136"></rect><rect fill="#ecdcbd" height="10" rx="5" width="36" x="182" y="156"></rect></g>
+<g fill="#2a7f8e"><circle cx="340" cy="104" r="6"></circle><circle cx="366" cy="96" r="6"></circle><circle cx="392" cy="108" r="6"></circle><circle cx="352" cy="128" r="6"></circle><circle cx="384" cy="136" r="6"></circle><circle cx="410" cy="124" r="6"></circle><circle cx="336" cy="152" r="6"></circle><circle cx="372" cy="160" r="6"></circle><circle cx="404" cy="156" r="6"></circle></g>
+<circle cx="516" cy="128" fill="#b7a6d6" r="18"></circle><text class="sv-s" style="fill:#fff" text-anchor="middle" x="516" y="133">essence</text>
+<g marker-end="url(#ahN)" stroke="#34466b" stroke-width="1.5"><line x1="530" x2="556" y1="114" y2="96"></line><line x1="534" x2="562" y1="132" y2="138"></line><line x1="522" x2="536" y1="146" y2="168"></line></g>
+<!-- stores -->
+<g class="sv-g"><text x="34" y="206">STORES</text><text x="178" y="206">STORES</text><text x="322" y="206">STORES</text><text x="466" y="206">STORES</text></g>
+<g class="sv-t">
+<text x="34" y="226">necessary +</text><text x="34" y="244">sufficient</text><text x="34" y="262">features</text>
+<text x="178" y="226">one summary of</text><text x="178" y="244">weighted</text><text x="178" y="262">features</text>
+<text x="322" y="226">remembered</text><text x="322" y="244">examples,</text><text x="322" y="262">no summary</text>
+<text x="466" y="226">a theory: how</text><text x="466" y="244">features fit</text><text x="466" y="262">+ hidden cause</text>
+</g>
+<g class="sv-g"><text x="34" y="296">CLASSIFIES BY</text><text x="178" y="296">CLASSIFIES BY</text><text x="322" y="296">CLASSIFIES BY</text><text x="466" y="296">CLASSIFIES BY</text></g>
+<g class="sv-t">
+<text x="34" y="316">checking the</text><text x="34" y="334">rule</text>
+<text x="178" y="316">match to the</text><text x="178" y="334">prototype</text>
+<text x="322" y="316">summed similarity</text><text x="322" y="334">to exemplars</text>
+<text x="466" y="316">best explanation;</text><text x="466" y="334">essence wins</text>
+</g>
+<g class="sv-s"><text x="34" y="376">Bruner et al. (1956)</text><text x="178" y="376">Smith &amp; Medin (1981)</text><text x="322" y="376">Medin &amp; Schaffer</text><text x="322" y="390">(1978)</text><text x="466" y="376">Medin &amp; Ortony</text><text x="466" y="390">(1989)</text></g>
+<rect fill="#fff" height="72" rx="14" stroke="#c9a96e" stroke-width="2" width="560" x="20" y="410"></rect>
+<text class="sv-g" x="34" y="434">CURRENT VIEW: MULTIPLE SYSTEMS</text>
+<text class="sv-t" x="34" y="456">General descriptions + strong exemplars + rules + knowledge, possibly</text>
+<text class="sv-t" x="34" y="474">in different neural structures (Maddox &amp; Ashby, 2004; Malt, 1989)</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">📏</span><b>Classical:</b> a definition — necessary and jointly sufficient features; all-or-none.</li>
+<li><span class="ic">⭐</span><b>Prototype:</b> a summary of features weighted by frequency; classify by match. Posner et al. (1967): never-seen prototypes are “recognised”.</li>
+<li><span class="ic">🗂️</span><b>Exemplar:</b> stored examples; summed similarity decides. Allen &amp; Brooks (1991): similarity to an old item overrides a rule.</li>
+<li><span class="ic">🧬</span><b>Knowledge / essentialist:</b> concepts as theories; beliefs about essences can override similarity (Keil, 1989; Rips, 1989).</li>
+<li><span class="ic">🤝</span><b>Consensus:</b> multiple systems — summaries, exemplars and rules together.</li>
+</ul>
+</div>
+<div class="key">Categories are represented not by definitions but by similarity-based summaries (prototypes) and/or remembered exemplars, shaped by world knowledge — most likely through multiple systems.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> <i>rulebook · composite sketch · photo album · detective’s theory</i>.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “Maybe you store a strict definition, maybe an average bird, maybe every bird you’ve ever seen, or maybe a theory about what makes something a bird. The evidence says the definition idea fails, and we probably use a mix of the others.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Describing prototype and exemplar views without the difference that matters: summary vs no summary.</li><li>Leaving out the multiple-systems conclusion.</li></ul></div>
+</article>
+<article class="obj" id="A3"><span class="objtag">Objective A3</span>
+<h3 class="q">What are the (dis)advantages of the different views?</h3>
+<p class="sub">Every view wins some findings and loses others — learn which study hurts which theory.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> for each view, what does it explain well and what does it fail to explain — backed by named evidence.</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model"><b>Classical view.</b> Advantages: it is simple and precise, works for formal concepts (triangle) and matches people’s intuition that membership is all-or-none. Disadvantages: most categories have no necessary and sufficient features (game, dog, planet); it cannot explain typicality (Rosch, 1973) or fuzzy boundaries and inconsistent judgments (Hampton, 1979; McCloskey &amp; Glucksberg, 1978). <b>Prototype view.</b> Advantages: no definitions are needed; typicality and fuzzy boundaries follow from graded similarity (bowling lies between “sport” and “game”); prototypes are abstracted from experience (Posner et al., 1967) and can be learned from general statements. Disadvantages: an average loses correlations between features (small birds sing, large birds squawk; Mervis &amp; Rosch, 1981), cannot explain context effects (“campfire instrument” → guitar; Roth &amp; Shoben, 1983) or conceptual combination (“pet fish”; Hampton, 1993); it works better as a description than as an explanation. <b>Exemplar view.</b> Advantages: nothing is averaged away, so correlations (Malt &amp; Smith, 1984) and context effects are explained; similarity to stored items overrides rules (Allen &amp; Brooks, 1991); it wins most lab comparisons. Disadvantages: storing every encounter is uneconomical (Komatsu, 1992); it cannot explain recognition of a never-seen prototype; lab studies use few items seen many times (Smith &amp; Minda, 1998). <b>Knowledge / essentialist view.</b> Advantages: explains faster learning of coherent concepts (Murphy &amp; Allopenna, 1994) and why categorisation can override similarity (Keil, 1989; Rips, 1989). Disadvantages: it is less specific about how knowledge is represented, and most categories have no real essence. Overall, both prototypes and exemplars have merit (Malt, 1989), supporting a multiple-systems view.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Evidence scorecard" role="img" viewbox="0 0 600 500">
+<text class="sv-h" x="20" y="30">The evidence scorecard</text>
+<g class="sv-b" text-anchor="middle"><text x="356" y="60">Classical</text><text x="432" y="60">Prototype</text><text x="506" y="60">Exemplar</text><text x="572" y="60">Know.</text></g>
+<line stroke="#e8e1d3" x1="20" x2="590" y1="70" y2="70"></line>
+<g class="sv-t" id="a3Rows"></g>
+<g font-size="17" id="a3Cells" text-anchor="middle"></g>
+<text class="sv-s" x="20" y="490">✓ handles it · ✗ problem for it · ± partly · – not addressed</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">📏</span><b>Classical:</b> + precise, fits formal concepts (triangle) and our intuition of all-or-none membership; − no definitions for most categories, no typicality, no fuzzy boundaries.</li>
+<li><span class="ic">⭐</span><b>Prototype:</b> + typicality, fuzzy edges, Posner, learning from statements; − loses feature correlations, ignores context, fails for “pet fish”.</li>
+<li><span class="ic">🗂️</span><b>Exemplar:</b> + correlations, context, Allen &amp; Brooks, wins most lab comparisons; − economy, never-seen prototype, lab tasks with few items.</li>
+<li><span class="ic">🧬</span><b>Knowledge:</b> + coherence effects (donker), essentialism (Keil, Rips); − vague about the actual representation; essences mostly don’t exist.</li>
+<li><span class="ic">🤝</span>Conclusion: each has merit — the boundary between theories “is definitely fuzzy” (Robinson-Riegler).</li>
+</ul>
+</div>
+<div class="key">Each view trades off economy against detail: the prototype is compact but loses information; exemplars keep information but are costly — so evidence points to multiple systems.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> prototypes lose the <i>details</i> (correlations, context); exemplars keep <i>too many</i> details (economy).</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “Definitions are neat but reality isn’t. Averages explain why robins feel birdier than penguins, but they forget that small birds are the singers. Remembering every example fixes that, but it’s a lot of storage. So we probably mix strategies.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Pros and cons with no study attached.</li><li>Forgetting the classical view’s advantages (formal concepts, all-or-none intuition).</li></ul></div>
+</article>
+<article class="obj" id="A4"><span class="objtag">Objective A4</span>
+<h3 class="q">How do the different views explain the typicality effect?</h3>
+<p class="sub">Typical members are verified faster, learned earlier and named first — who can explain why?</p>
+<div class="plainw">🧭 <b>What the question asks:</b> say, for each view, why typical members are processed faster and judged better — and which view can’t explain it.</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">The <b>typicality effect</b> refers to the finding that typical members (robin) are judged better examples, categorised faster, learned earlier and named first compared with atypical members (penguin) (Rosch, 1973; Murphy’s Text Box 1). The best account of its source is <b>family resemblance</b>: typical items have many features common in their category and few features common in other categories (Rosch &amp; Mervis, 1975); frequency plays only a minor role (Rosch, Simpson &amp; Miller, 1976). The <b>classical view</b> cannot explain typicality, because all members satisfy the same definition and should be equally good. The <b>prototype view</b> explains it directly: typical items share more, and more highly weighted, features with the category prototype, so they match it better and faster; atypical items have fewer such features and may share features with other categories. The <b>exemplar view</b> explains it through summed similarity: typical items resemble many stored exemplars (most birds we have encountered are robin-like), so they are retrieved more readily; it also explains why typicality depends on context (e.g., “campfire musical instrument” → guitar). In <b>semantic network</b> models, typical members are connected to the category node by shorter, stronger links, so activation reaches threshold sooner.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Robin vs penguin under four views" role="img" viewbox="0 0 600 470">
+<text class="sv-h" x="20" y="30">Robin vs penguin, four ways</text>
+<text class="sv-s" x="20" y="50">Bar = how quickly each is accepted as a bird (illustrative)</text>
+<g id="a4Rows"></g>
+<rect fill="#f6eedd" height="92" rx="14" stroke="#c9a96e" width="560" x="20" y="370"></rect>
+<text class="sv-g" x="34" y="394">WHERE TYPICALITY COMES FROM</text>
+<text class="sv-t" x="34" y="416">Family resemblance (Rosch &amp; Mervis, 1975): features common in the category</text>
+<text class="sv-t" x="34" y="436">and rare in other categories. Not mainly frequency: rugs and tables are seen</text>
+<text class="sv-t" x="34" y="454">daily, yet table is far more typical (Rosch, Simpson &amp; Miller, 1976).</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">📏</span><b>Classical:</b> cannot explain it — every member meets the same definition, so all should be equal.</li>
+<li><span class="ic">⭐</span><b>Prototype:</b> typical items share more high-weight features with the prototype → better, faster match. Typicality is “the very basis” of the view.</li>
+<li><span class="ic">🗂️</span><b>Exemplar:</b> typical items resemble many stored exemplars (most birds you know are robin-like) → higher summed similarity; also explains context-dependent typicality.</li>
+<li><span class="ic">🕸️</span><b>Network:</b> typical members have short, strong links to the category node (Lecture 7).</li>
+<li><span class="ic">🧬</span><b>Source:</b> family resemblance, not frequency.</li>
+</ul>
+</div>
+<div class="key">Only the classical view fails; every similarity-based view explains typicality as greater feature overlap between typical members and their category.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> “How close to the ideal?” (prototype) · “How many look-alikes?” (exemplar) · “How short the path?” (network) · “Everyone passes the same test” (classical ✗).</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “A robin feels more like a bird because it looks like the average bird, looks like most birds you’ve met, and is tightly connected to ‘bird’ in your head. The old definition theory can’t explain that, because to it a bird is a bird.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Not defining the typicality effect before explaining it.</li><li>Forgetting to say that the classical view fails — and why.</li></ul></div>
+</article>
+<section class="partH" id="partB"><div class="eyebrow">Part B · Robinson-Riegler, pp. 198–207</div><h2>B. Networks and concepts</h2></section>
+<article class="obj" id="B1"><span class="objtag">Objective B1</span>
+<h3 class="q">How is semantic knowledge organised in memory?</h3>
+<p class="sub">Robinson-Riegler’s answer: as an associative network of concepts — plus categories of different kinds.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> Robinson-Riegler zooms out from single categories to all knowledge — what is the architecture, and how do we know?</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">Robinson-Riegler describes semantic knowledge as organised in <b>semantic networks</b>: concepts are represented by <b>nodes</b>, and the <b>links</b> between them represent a wide variety of relationships — category membership (canary → bird), properties (yellow → canary) and looser associations (canary → pet → cat). Related concepts are figuratively “close” to each other. In the <b>spreading activation model</b> (Collins &amp; Loftus, 1975) the network is flexible rather than strictly hierarchical, and link length reflects associative strength. The organisation is studied with <b>category verification</b> (“A robin is a bird”) and <b>feature verification</b> tasks (“A cat has pointy ears”), where response speed reveals how closely knowledge is connected: robin-is-bird is verified faster than penguin-is-bird, and pointy ears faster than skin. Semantic networks differ from neural networks (a node is a specific concept rather than a neuron-like unit), but both explain retrieval through excitatory connections and spreading activation. Robinson-Riegler adds that categories are themselves of different types — natural kinds, artifacts, ad hoc categories (Barsalou, 1983) and metaphorical concepts — which differ in how similar their members are (Goldstone &amp; Kersten, 2003). <span class="bg">background</span> The earlier hierarchical model of Collins and Quillian (1969) stored properties at the highest level (cognitive economy) but could not explain typicality.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Semantic network and model comparison" role="img" viewbox="0 0 600 500">
+<text class="sv-h" x="20" y="30">Knowledge as a web</text>
+<text class="sv-s" x="20" y="50">After Figure 5.11 · nodes = concepts · links = relations (membership, property, association)</text>
+<g stroke="#c8ccd4" stroke-width="2">
+<line x1="150" x2="300" y1="92" y2="84"></line><line x1="150" x2="360" y1="92" y2="140"></line><line x1="150" x2="80" y1="92" y2="150"></line>
+<line x1="80" x2="200" y1="150" y2="170"></line><line x1="80" x2="40" y1="150" y2="215"></line><line x1="40" x2="40" y1="215" y2="290"></line>
+<line x1="130" x2="200" y1="220" y2="170"></line><line x1="200" x2="270" y1="170" y2="250"></line><line x1="200" x2="360" y1="170" y2="250"></line>
+<line x1="40" x2="128" y1="290" y2="300"></line><line x1="130" x2="128" y1="220" y2="300"></line><line x1="130" x2="200" y1="220" y2="320"></line><line x1="270" x2="200" y1="250" y2="320"></line><line x1="200" x2="320" y1="320" y2="330"></line><line x1="270" x2="360" y1="250" y2="250"></line>
+</g>
+<g id="b1Nodes"></g>
+<!-- verification -->
+<rect fill="#e3ecf7" height="270" rx="14" stroke="#9fb6d6" width="180" x="400" y="64"></rect>
+<text class="sv-b" x="412" y="88">⏱️ How we test it</text>
+<text class="sv-g" x="412" y="112">CATEGORY</text>
+<text class="sv-t" x="412" y="130">“A robin is a bird”</text>
+<rect fill="#2f8a57" height="9" rx="4" width="60" x="412" y="136"></rect>
+<text class="sv-t" x="412" y="160">“A penguin is a bird”</text>
+<rect fill="#c0392b" height="9" rx="4" width="120" x="412" y="166"></rect>
+<text class="sv-g" x="412" y="198">FEATURE</text>
+<text class="sv-t" x="412" y="216">“A cat has pointy ears”</text>
+<rect fill="#2f8a57" height="9" rx="4" width="64" x="412" y="222"></rect>
+<text class="sv-t" x="412" y="246">“A cat has skin”</text>
+<rect fill="#c0392b" height="9" rx="4" width="116" x="412" y="252"></rect>
+<text class="sv-s" x="412" y="284">speed is the measure;</text>
+<text class="sv-s" x="412" y="300">bars illustrative</text>
+<text class="sv-s" x="412" y="322">faster = closer</text>
+<!-- category types -->
+<rect fill="#fff" height="140" rx="14" stroke="#e8e1d3" width="560" x="20" y="350"></rect>
+<text class="sv-g" x="34" y="374">KINDS OF CATEGORIES · MEMBER SIMILARITY HIGH → LOW (GOLDSTONE &amp; KERSTEN, 2003)</text>
+<g>
+<rect fill="#e2f1e6" height="86" rx="10" width="126" x="34" y="388"></rect><text class="sv-b" text-anchor="middle" x="97" y="410">Natural kinds</text><text class="sv-s" text-anchor="middle" x="97" y="432">flowers:</text><text class="sv-s" text-anchor="middle" x="97" y="448">rose, daisy</text>
+<rect fill="#f6eedd" height="86" rx="10" width="126" x="170" y="388"></rect><text class="sv-b" text-anchor="middle" x="233" y="410">Artifacts</text><text class="sv-s" text-anchor="middle" x="233" y="432">sport: soccer,</text><text class="sv-s" text-anchor="middle" x="233" y="448">cross-country</text>
+<rect fill="#fbe9d9" height="86" rx="10" width="126" x="306" y="388"></rect><text class="sv-b" text-anchor="middle" x="369" y="410">Ad hoc</text><text class="sv-s" text-anchor="middle" x="369" y="432">things to take</text><text class="sv-s" text-anchor="middle" x="369" y="448">on vacation</text>
+<rect fill="#f7e4e4" height="86" rx="10" width="126" x="442" y="388"></rect><text class="sv-b" text-anchor="middle" x="505" y="410">Metaphorical</text><text class="sv-s" text-anchor="middle" x="505" y="432">“a prison”: job,</text><text class="sv-s" text-anchor="middle" x="505" y="448">relationship</text>
+</g>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">🕸️</span><b>Semantic network:</b> knowledge stored as an associative network — nodes for concepts, links for relations (canary → bird; yellow → canary; canary → pet → cat).</li>
+<li><span class="ic">📏</span>Related concepts are <b>“close”</b> (figuratively); link length reflects associative strength (Collins &amp; Loftus, 1975).</li>
+<li><span class="ic">⏱️</span>Tested with <b>category</b> and <b>feature verification</b>; reaction time is the measure.</li>
+<li><span class="ic">🧠</span>Not a neural network: a node = one specific concept; but both rely on excitatory connections and spreading activation.</li>
+<li><span class="ic">🗂️</span>Categories themselves differ in coherence: natural kinds &gt; artifacts &gt; ad hoc &gt; metaphorical.</li>
+</ul>
+</div>
+<div class="key">Semantic knowledge is organised as an associative network of concept nodes whose link strengths reflect how closely concepts are related — revealed by verification speed.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> a <i>metro map</i>: stations = concepts, lines = relations, and closely linked stations are one stop apart.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “Picture your knowledge as dots joined by lines — ‘canary’ to ‘bird’, ‘yellow’, ‘pet’. We can tell how close two dots are by timing how fast people say ‘true’ to ‘a canary is a bird’.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Confusing semantic networks with neural networks.</li><li>Not mentioning verification tasks as the evidence, or that speed (not accuracy) is measured.</li></ul></div>
+</article>
+<article class="obj" id="B2"><span class="objtag">Objective B2</span>
+<h3 class="q">What is the role of similarity in knowledge retrieval?</h3>
+<p class="sub">Similarity decides what comes to mind and what we call things — until a belief about essence overrules it.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> how does similarity decide what we retrieve and how we classify — and where does similarity stop being enough?</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">Similarity plays a role at two levels. First, in the <b>semantic network</b>, similar or related concepts are represented close together and strongly linked, so activating one concept spreads activation to similar ones; this is why typical members (similar to their category) are verified faster and why related words are primed. Second, in <b>categorisation</b>, similarity-based approaches claim that we classify an item by judging its similarity to some standard in long-term memory. The three approaches differ only in the standard: a clearly specified set of defining features (classical view; Bruner et al., 1956), an abstracted best example (prototype view), or the stored members of the category (exemplar view), where the exemplar retrieved depends on context (an eagle → a large bird of prey; Ross &amp; Spalding, 1994). However, similarity is not the whole story. Similarity-based approaches are bottom-up; the <b>essentialist approach</b> argues that categorisation can be top-down, based on beliefs about a concept’s underlying essence (Medin &amp; Ortony, 1989). Rips (1989) demonstrated this with stories of a bird-like creature that came to look like an insect: participants judged it more similar to an insect but still a bird. Similarity is therefore central to retrieval and classification, but can be overridden by deeper knowledge.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Target compared with three standards, and essentialist override" role="img" viewbox="0 0 600 500">
+<text class="sv-h" x="20" y="30">Compare with a standard</text>
+<text class="sv-s" x="20" y="50">Similarity-based approaches: categorising = judging similarity to a standard in LTM</text>
+<circle cx="300" cy="190" fill="#f6eedd" r="46" stroke="#a8854a" stroke-width="2"></circle>
+<text font-size="24" text-anchor="middle" x="300" y="186">🐦</text><text class="sv-s" text-anchor="middle" x="300" y="210">new item</text>
+<g stroke="#a8854a" stroke-dasharray="5 4" stroke-width="2"><line x1="258" x2="176" y1="168" y2="118"></line><line x1="342" x2="424" y1="168" y2="118"></line><line x1="300" x2="300" y1="236" y2="272"></line></g>
+<rect fill="#e3ecf7" height="80" rx="12" stroke="#9fb6d6" width="170" x="30" y="72"></rect>
+<text class="sv-b" text-anchor="middle" x="115" y="96">📋 a definition</text><text class="sv-t" text-anchor="middle" x="115" y="116">classical view</text><text class="sv-s" text-anchor="middle" x="115" y="136">match all features?</text>
+<rect fill="#f6eedd" height="80" rx="12" stroke="#c9a96e" width="170" x="400" y="72"></rect>
+<text class="sv-b" text-anchor="middle" x="485" y="96">⭐ a prototype</text><text class="sv-t" text-anchor="middle" x="485" y="116">prototype view</text><text class="sv-s" text-anchor="middle" x="485" y="136">close enough?</text>
+<rect fill="#e2f1e6" height="80" rx="12" stroke="#a9d3b7" width="200" x="200" y="276"></rect>
+<text class="sv-b" text-anchor="middle" x="300" y="300">🗂️ stored exemplars</text><text class="sv-t" text-anchor="middle" x="300" y="320">exemplar view</text><text class="sv-s" text-anchor="middle" x="300" y="340">similar to many?</text>
+<text class="sv-t" x="30" y="200">In the network,</text><text class="sv-t" x="30" y="218">similar = close:</text><text class="sv-t" x="30" y="236">activating one</text><text class="sv-t" x="30" y="254">pre-activates</text><text class="sv-t" x="30" y="272">its neighbours</text>
+<text class="sv-t" x="440" y="200">Context picks</text><text class="sv-t" x="440" y="218">the exemplar:</text><text class="sv-t" x="440" y="236">“is an eagle a</text><text class="sv-t" x="440" y="254">bird?” → a large</text><text class="sv-t" x="440" y="272">bird of prey</text>
+<!-- limit -->
+<rect fill="#f7e4e4" height="120" rx="14" stroke="#e0b4b4" width="560" x="20" y="372"></rect>
+<text class="sv-b" x="34" y="396">The limit — essentialism is top-down (Rips, 1989)</text>
+<text class="sv-t" x="34" y="420">A bird-like creature changed to look like an insect:</text>
+<text class="sv-s" x="34" y="448">MORE SIMILAR TO</text>
+<rect fill="#c0392b" height="16" opacity=".75" rx="8" width="300" x="150" y="436"></rect><text class="sv-t" x="460" y="449">🐞 insect</text>
+<text class="sv-s" x="34" y="476">JUDGED TO BE A</text>
+<rect fill="#2f8a57" height="16" opacity=".8" rx="8" width="300" x="150" y="464"></rect><text class="sv-t" x="460" y="477">🐦 bird</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">🧲</span><b>In the network:</b> similar/related concepts are close, so retrieving one pre-activates the others — faster verification and priming.</li>
+<li><span class="ic">📋</span><b>In categorisation:</b> similarity-based approaches compare the target with a <b>standard</b> in long-term memory.</li>
+<li><span class="ic">⚖️</span>The standard differs: a <b>definition</b> (classical), an abstracted <b>best example</b> (prototype) or <b>all members</b> (exemplar).</li>
+<li><span class="ic">🦅</span>Exemplar retrieval depends on context: “is an eagle a bird?” retrieves a large bird of prey (Ross &amp; Spalding, 1994).</li>
+<li><span class="ic">🧬</span><b>Limit:</b> essentialist approaches are top-down — beliefs about the essence can override similarity (Rips, 1989; Medin &amp; Ortony, 1989).</li>
+</ul>
+</div>
+<div class="key">Similarity drives both retrieval (close concepts activate each other) and categorisation (matching a stored standard), but it is not sufficient: beliefs about essences can override it.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> similarity is the <i>magnet</i>; essentialism is the <i>ID card</i> that can overrule it.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “Mostly we decide what something is by how much it resembles what we know. But if a bird were chemically changed to look like an insect, you’d still call it a bird — so deeper beliefs can beat looks.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Discussing only categorisation and forgetting retrieval in the network (or vice versa).</li><li>Not giving the limit of similarity (Rips / essentialism).</li></ul></div>
+</article>
+<article class="obj" id="B3"><span class="objtag">Objective B3</span>
+<h3 class="q">How do network models explain typicality and semantic priming?</h3>
+<p class="sub">One mechanism, two effects: activation that spreads, fades, adds up and fires at a threshold.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> use the network’s processing assumptions to explain two effects — faster verification of typical members, and faster recognition of words after a related prime.</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">In the <b>spreading activation model</b> (Collins &amp; Loftus, 1975), concepts are nodes in an associative network, and link length reflects the strength of association. When a concept is presented, its node is activated and activation spreads along the links to related nodes; it weakens with time, distance and the number of concepts activated; activation arriving at a node is summed, and when it exceeds a threshold, that concept is activated. <b>Semantic priming</b> — the finding that processing one stimulus speeds processing of a related one — follows directly: the prime “yellow” activates its node, and activation spreads to linked concepts such as SUN, CANARY and LEMON, giving them a head start toward threshold. When “lemon” is then presented, less additional activation is needed, so it is recognised faster than an unrelated word. The <b>typicality effect</b> follows because typical members are closely linked to their category label: the distance between a category’s prototype and its label is short, so in “A robin is a bird” activation reaches threshold sooner than in “A penguin is a bird”. For the same reason, prototypes are more readily primed by the category name. <span class="bg">background</span> A strictly hierarchical network (Collins &amp; Quillian, 1969) would place both robin and penguin one link from BIRD and therefore could not explain typicality — the flexible, strength-based network can.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Activation over time with and without prime" role="img" viewbox="0 0 600 500">
+<text class="sv-h" x="20" y="30">The head start</text>
+<text class="sv-s" x="20" y="50">Activation of the node LEMON over time (illustrative)</text>
+<line stroke="#6b7280" x1="60" x2="400" y1="260" y2="260"></line><line stroke="#6b7280" x1="60" x2="60" y1="70" y2="260"></line>
+<line stroke="#c0392b" stroke-dasharray="6 4" stroke-width="2" x1="60" x2="400" y1="110" y2="110"></line>
+<text class="sv-b" style="fill:#c0392b" x="404" y="114">threshold</text>
+<path d="M60 180 C150 175 190 120 225 110 L400 90" fill="none" stroke="#2f8a57" stroke-width="3.5"></path>
+<path d="M60 258 C170 250 270 150 320 110 L400 96" fill="none" stroke="#8a94a6" stroke-width="3.5"></path>
+<circle cx="225" cy="110" fill="#2f8a57" r="6"></circle><circle cx="320" cy="110" fill="#8a94a6" r="6"></circle>
+<text class="sv-t" style="fill:#2f8a57" x="70" y="160">after prime “yellow”</text>
+<text class="sv-t" style="fill:#6b7280" x="236" y="236">no related prime</text>
+<line stroke="#2f8a57" stroke-dasharray="3 3" x1="225" x2="225" y1="118" y2="260"></line><line stroke="#8a94a6" stroke-dasharray="3 3" x1="320" x2="320" y1="118" y2="260"></line>
+<text class="sv-s" text-anchor="middle" x="225" y="278">faster “yes”</text><text class="sv-s" text-anchor="middle" x="320" y="278">slower</text>
+<text class="sv-s" text-anchor="middle" x="230" y="296">time after “lemon” appears →</text>
+<!-- typicality -->
+<rect fill="#e3ecf7" height="170" rx="14" stroke="#9fb6d6" width="160" x="420" y="140"></rect>
+<text class="sv-b" x="434" y="164">Typicality</text>
+<ellipse cx="470" cy="210" fill="#fff" rx="30" ry="15" stroke="#34466b" stroke-width="2"></ellipse><text class="sv-s" style="font-weight:700" text-anchor="middle" x="470" y="215">BIRD</text>
+<line stroke="#2f8a57" stroke-width="4" x1="500" x2="530" y1="210" y2="210"></line><text font-size="16" text-anchor="middle" x="548" y="216">🐦</text>
+<line stroke="#c0392b" stroke-dasharray="4 3" stroke-width="2" x1="470" x2="540" y1="226" y2="282"></line><text font-size="16" text-anchor="middle" x="552" y="292">🐧</text>
+<text class="sv-s" x="434" y="188">short link: fast</text><text class="sv-s" x="434" y="300">long link: slow</text>
+<!-- assumptions -->
+<rect fill="#f6eedd" height="170" rx="14" stroke="#c9a96e" width="560" x="20" y="320"></rect>
+<text class="sv-g" x="34" y="344">COLLINS &amp; LOFTUS (1975): PROCESSING ASSUMPTIONS</text>
+<text class="sv-t" x="34" y="370">1 · A presented concept’s node is activated.</text>
+<text class="sv-t" x="34" y="394">2 · Activation spreads along the links to related concepts.</text>
+<text class="sv-t" x="34" y="418">3 · It weakens with time, distance and the number of concepts activated.</text>
+<text class="sv-t" x="34" y="442">4 · Activation reaching a node is summed; past a threshold, the</text>
+<text class="sv-t" x="52" y="460">concept is activated (retrieved).</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">🟢</span><b>Priming:</b> the prime (“yellow”) activates its node; activation spreads to SUN, CANARY, LEMON, giving them a <b>head start</b> toward threshold.</li>
+<li><span class="ic">🍋</span>When “lemon” appears, less extra activation is needed → recognised faster (“primed and ready”). Unrelated words get no head start.</li>
+<li><span class="ic">🐦</span><b>Typicality:</b> the distance between prototypes and category labels is short → typical members reach threshold first.</li>
+<li><span class="ic">🔁</span>Prototypes are also more likely to be <b>primed by the category name</b>.</li>
+<li><span class="ic">🌳</span><span class="bg">background</span> A strict hierarchy (Collins &amp; Quillian) places all members one link from the category, so it cannot explain typicality.</li>
+</ul>
+</div>
+<div class="key">Both effects follow from spreading activation to a threshold: priming gives related nodes a head start, and typical members are reached faster because they are more closely linked to their category.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> priming is <i>pre-heating the oven</i>; typicality is <i>living next door</i>.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “Hearing ‘yellow’ makes ‘lemon’ glow a little in your head, so it lights up faster when it comes. And ‘robin’ sits right next to ‘bird’, so ‘a robin is a bird’ clicks faster than ‘a penguin is a bird’.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Not stating the processing assumptions (spread, decay, summation, threshold).</li><li>Explaining priming but forgetting typicality, or vice versa.</li></ul></div>
+</article>
+<section class="partH" id="partC"><div class="eyebrow">Part C · Bozeat et al. (2003), Cognitive Neuropsychology</div><h2>C. Semantic dementia</h2></section>
+<article class="obj" id="C1"><span class="objtag">Objective C1</span>
+<h3 class="q">What is semantic dementia?</h3>
+<p class="sub">Meaning fades across every modality while perception, reasoning and fluent speech hold up.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> define the disorder — cause, symptoms, what is spared and how it progresses.</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model"><b>Semantic dementia (SD)</b> is a progressive neurodegenerative syndrome characterised by a very selective impairment of conceptual knowledge. It is associated with circumscribed atrophy of the polar and inferolateral regions of the temporal lobes, often bilateral and usually more severe on the left. Patients present with a progressive loss of vocabulary affecting both expressive and receptive language, in the context of fluent speech; they show reduced category fluency, anomia and impaired comprehension (e.g., word–picture matching, Pyramids &amp; Palm Trees). The impairment is not limited to words: it appears across modalities — pictures, sounds, object use — with strong item consistency across tasks, which suggests degradation of central conceptual knowledge independent of modality (Bozeat et al., 2000). By contrast, other abilities are relatively spared: visual perception (VOSP, object decision), visuospatial and constructional skills (copying the Rey figure), non-verbal reasoning (Raven’s matrices), working memory and, until late, non-verbal episodic memory. The disorder progresses from specific to general knowledge, as when a patient names a duck “duck”, then “swan”, then “bird” and finally “animal” over 18 months (Hodges et al., 1995). This selectivity makes SD a particularly informative testing ground for the structure of semantic memory.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Semantic dementia profile" role="img" viewbox="0 0 600 490">
+<text class="sv-h" x="20" y="30">The profile of semantic dementia</text>
+<rect fill="#fff" height="210" rx="14" stroke="#e8e1d3" width="250" x="20" y="46"></rect>
+<text class="sv-b" x="34" y="70">🧠 Cause</text>
+<g transform="translate(40,72) scale(0.55)">
+<path d="M52 176 C50 118 112 82 186 82 C262 82 306 124 304 176 C303 212 282 232 250 236 C238 262 206 276 172 270 C140 264 120 246 116 232 C82 230 54 212 52 176 Z" fill="#f3f0ea" stroke="#8a94a6" stroke-width="2.5"></path>
+<ellipse cx="160" cy="232" fill="#e7a3a3" rx="58" ry="24"></ellipse>
+</g>
+<text class="sv-t" x="34" y="236">polar &amp; inferolateral temporal</text>
+<text class="sv-s" x="34" y="252">atrophy · often bilateral · L &gt; R</text>
+<rect fill="#f7e4e4" height="102" rx="14" stroke="#e0b4b4" width="298" x="282" y="46"></rect>
+<text class="sv-b" x="296" y="70">❌ Lost (progressively)</text>
+<text class="sv-t" x="296" y="92">vocabulary: expressive and receptive</text>
+<text class="sv-t" x="296" y="112">naming · comprehension · category fluency</text>
+<text class="sv-t" x="296" y="132">object meaning in every modality</text>
+<rect fill="#e2f1e6" height="100" rx="14" stroke="#a9d3b7" width="298" x="282" y="156"></rect>
+<text class="sv-b" x="296" y="180">✅ Relatively spared</text>
+<text class="sv-t" x="296" y="202">fluent speech · perception (VOSP)</text>
+<text class="sv-t" x="296" y="222">copying the Rey figure · Raven’s</text>
+<text class="sv-t" x="296" y="242">working memory · everyday memory</text>
+<rect fill="#fbfaf6" height="120" rx="14" stroke="#e8e1d3" width="560" x="20" y="268"></rect>
+<text class="sv-g" x="34" y="292">PROGRESSION: NAMING A DUCK OVER 18 MONTHS (HODGES ET AL., 1995)</text>
+<g>
+<rect fill="#f6eedd" height="30" rx="8" stroke="#c9a96e" width="110" x="40" y="304"></rect><text class="sv-b" text-anchor="middle" x="95" y="324">“duck”</text>
+<rect fill="#f6eedd" height="30" rx="8" stroke="#c9a96e" width="110" x="176" y="320"></rect><text class="sv-b" text-anchor="middle" x="231" y="340">“swan”</text>
+<rect fill="#f6eedd" height="30" rx="8" stroke="#c9a96e" width="110" x="312" y="336"></rect><text class="sv-b" text-anchor="middle" x="367" y="356">“bird”</text>
+<rect fill="#f6eedd" height="30" rx="8" stroke="#c9a96e" width="110" x="448" y="352"></rect><text class="sv-b" text-anchor="middle" x="503" y="372">“animal”</text>
+</g>
+<g marker-end="url(#ah1)" stroke="#a8854a" stroke-width="2"><line x1="152" x2="172" y1="322" y2="332"></line><line x1="288" x2="308" y1="338" y2="348"></line><line x1="424" x2="444" y1="354" y2="364"></line></g>
+<rect fill="#f6eedd" height="84" rx="14" stroke="#c9a96e" width="560" x="20" y="398"></rect>
+<text class="sv-g" x="34" y="422">REAL DATA · STUDY 1 (TABLE 3): NAMING /64 FROM MILD TO SEVERE</text>
+<g id="c1Bars"></g>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">🧩</span><b>Definition:</b> a progressive neurodegenerative syndrome with a <b>very selective</b> impairment of conceptual knowledge.</li>
+<li><span class="ic">🧠</span><b>Cause:</b> circumscribed atrophy of the polar and inferolateral temporal lobes, usually left &gt; right.</li>
+<li><span class="ic">🗣️</span><b>Presentation:</b> progressive loss of vocabulary (expressive and receptive) with <b>fluent</b> speech.</li>
+<li><span class="ic">🌐</span><b>Amodal:</b> deficits across words, pictures, sounds and object use, with the same items failing across tasks (Bozeat et al., 2000).</li>
+<li><span class="ic">📉</span><b>Course:</b> specific before general — duck → swan → bird → animal.</li>
+</ul>
+</div>
+<div class="key">Semantic dementia is a progressive, selective loss of conceptual knowledge across modalities, caused by anterior temporal atrophy, with speech fluency, perception and reasoning relatively spared.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> a photo <i>slowly going out of focus</i>: fine details first, then only the outline remains.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “It’s a dementia that eats away at what words and things mean because part of the temporal lobe shrinks. People still talk fluently and can copy drawings, but slowly forget what a duck or a kettle is.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Describing SD as “memory loss”: everyday and episodic memory are relatively spared.</li><li>Forgetting the neural basis or the cross-modal nature.</li></ul></div>
+</article>
+<article class="obj" id="C2"><span class="objtag">Objective C2</span>
+<h3 class="q">What can we learn from semantic dementia about semantic memory?</h3>
+<p class="sub">The way knowledge falls apart shows how it was built.</p>
+<div class="plainw">🧭 <b>What the question asks:</b> which conclusions about the <i>healthy</i> semantic system follow from the pattern of loss in SD — each with its evidence?</div>
+<h4 style="margin-top:18px">✍️ Answer</h4>
+<div class="model">Bozeat et al. (2003) asked SD patients to draw objects and scored the drawings by features. Several lessons follow. <b>(1) Semantic memory is a unitary, amodal system:</b> drawing correlated with naming and word–picture matching at r = .96–.99, and error patterns in drawing mirrored those in naming, definitions and sorting, so all tasks draw on one central store rather than separate verbal and visual systems. <b>(2) It is dissociable from other cognition:</b> immediate copying, delayed copying of meaningless geometric shapes, copying the Rey figure and Raven’s matrices were relatively preserved, whereas performance declined as tasks relied more on meaning (immediate copy &gt; delayed copy &gt; drawing to name). <b>(3) Concepts are distributed patterns of features:</b> errors were omissions and intrusions of individual features, and categories and typicality can emerge from feature overlap without explicit category labels (Garrard et al., 2001; Rogers et al., 2002a). <b>(4) Shared features are robust and distinctive features fragile:</b> distinctive features were omitted most and domain-shared features least, explaining the specific-to-general loss (duck → bird → animal) and box-like artefacts. <b>(5) Degradation pulls concepts toward the prototype:</b> domain-shared features intruded (four legs on a duck), paralleling the over-extension of typical names. <b>(6) Apparent category-specific effects can arise from feature distribution:</b> animals showed more intrusions, but this disappeared once distinctiveness was controlled, because animals have more shared features (0.59 vs 0.29 per item). The authors cannot rule out a separate structural description system (Riddoch et al., 1988), but prefer an interactive account in which visual representations depend on semantic feedback.</div>
+<h4>🖼️ The answer in one picture — and the key points</h4>
+<div class="lgrid">
+<figure class="diagram">
+<svg aria-label="Six lessons around a core" role="img" viewbox="0 0 600 500">
+<text class="sv-h" x="20" y="30">Six lessons from one disease</text>
+<circle cx="300" cy="250" fill="#f6eedd" r="64" stroke="#a8854a" stroke-width="2"></circle>
+<text class="sv-b" text-anchor="middle" x="300" y="246">SEMANTIC</text><text class="sv-b" text-anchor="middle" x="300" y="264">MEMORY</text>
+<g stroke="#c9a96e" stroke-width="2"><line x1="246" x2="206" y1="214" y2="160"></line><line x1="354" x2="394" y1="214" y2="160"></line><line x1="236" x2="206" y1="250" y2="250"></line><line x1="364" x2="394" y1="250" y2="250"></line><line x1="246" x2="206" y1="288" y2="340"></line><line x1="354" x2="394" y1="288" y2="340"></line></g>
+<g>
+<rect fill="#e3ecf7" height="108" rx="12" stroke="#9fb6d6" width="186" x="20" y="52"></rect><text class="sv-b" x="32" y="74">1 · One amodal store</text><text class="sv-t" x="32" y="96">drawing ↔ naming ↔</text><text class="sv-t" x="32" y="114">matching: r = .96–.99</text><text class="sv-s" x="32" y="136">same items fail in all tasks</text>
+<rect fill="#e2f1e6" height="108" rx="12" stroke="#a9d3b7" width="186" x="394" y="52"></rect><text class="sv-b" x="406" y="74">2 · Separable</text><text class="sv-t" x="406" y="96">copying, shapes, Raven’s,</text><text class="sv-t" x="406" y="114">digit span spared</text><text class="sv-s" x="406" y="136">≠ episodic / perception</text>
+<rect fill="#f6eedd" height="108" rx="12" stroke="#c9a96e" width="186" x="20" y="196"></rect><text class="sv-b" x="32" y="218">3 · Distributed</text><text class="sv-t" x="32" y="240">errors are single</text><text class="sv-t" x="32" y="258">features lost or added</text><text class="sv-s" x="32" y="280">categories emerge</text>
+<rect fill="#fbe9d9" height="108" rx="12" stroke="#e7c3a1" width="186" x="394" y="196"></rect><text class="sv-b" x="406" y="218">4 · Shared = robust</text><text class="sv-t" x="406" y="240">distinctive omitted most;</text><text class="sv-t" x="406" y="258">domain-shared least</text><text class="sv-s" x="406" y="280">duck → bird → animal</text>
+<rect fill="#f7e4e4" height="108" rx="12" stroke="#e0b4b4" width="186" x="20" y="340"></rect><text class="sv-b" x="32" y="362">5 · Toward prototype</text><text class="sv-t" x="32" y="384">shared features intrude:</text><text class="sv-t" x="32" y="402">a duck with four legs</text><text class="sv-s" x="32" y="424">= typicality structure</text>
+<rect fill="#ece6f6" height="108" rx="12" stroke="#b7a6d6" width="186" x="394" y="340"></rect><text class="sv-b" x="406" y="362">6 · No living store</text><text class="sv-t" x="406" y="384">animals 0.59 vs artefacts</text><text class="sv-t" x="406" y="402">0.29 shared features</text><text class="sv-s" x="406" y="424">domain effect vanishes</text>
+</g>
+<rect fill="#fff" height="34" rx="10" stroke="#c9a96e" width="560" x="20" y="460"></rect>
+<text class="sv-t" x="34" y="482">Rival (not refuted): a separate structural description system (Riddoch et al., 1988)</text>
+</svg>
+</figure>
+<ul class="points">
+<li><span class="ic">🌐</span><b>Unitary and amodal:</b> drawing, naming and matching decline together (r = .96–.99); error patterns match across verbal and non-verbal tasks.</li>
+<li><span class="ic">🧱</span><b>Dissociable:</b> immediate copying, meaningless-shape recall, Rey copy and Raven’s are spared.</li>
+<li><span class="ic">☁️</span><b>Distributed features:</b> concepts are overlapping features; categories and typicality emerge from overlap (Garrard et al., 2001; Rogers et al., 2002a).</li>
+<li><span class="ic">🎯</span><b>Shared robust, distinctive fragile:</b> distinctive features omitted most; domain-shared features intrude → drift toward the prototype.</li>
+<li><span class="ic">🐾</span><b>Domain effects</b> come from feature distribution: the animal &gt; artefact intrusion effect vanishes when distinctiveness is controlled.</li>
+</ul>
+</div>
+<div class="key">Semantic dementia shows that meaning is stored in one amodal but distributed network of features, in which shared features are robust and distinctive features fragile — the same overlap that produces typicality.</div>
+<div class="two-col"><div class="hook">🪝 <b>Memory hook:</b> erosion on a <i>sandcastle</i>: the flags and towers (distinctive features) go first; the broad base (shared features) goes last.</div><div class="friend">🗣️ <b>Explain it to a friend:</b> “The disease doesn’t delete random facts. It first removes what makes a duck different from other birds, then what makes it a bird, and the leftover ‘generic animal’ bits even get added to the wrong things. So concepts must be built from overlapping features, and shared ones are the sturdiest.”</div></div>
+<div class="lost">⚠️ <b>Where marks are lost</b><ul><li>Giving lessons without evidence from the study (numbers, tasks).</li><li>Forgetting the geometric-shape control that rules out an episodic explanation.</li><li>Not mentioning the rival account.</li></ul></div>
+</article><section class="partH" id="synth" style="margin-top:40px"><div class="eyebrow">Putting A, B and C together</div><h2>🧵 Synthesis</h2><p style="margin:.6em 0 0"><b>Thesis: semantic memory is a network of concepts built from overlapping features, and feature overlap — similarity — explains how categories are structured, represented, retrieved and lost.</b> Murphy shows that categories cannot be defined: they have fuzzy boundaries and a graded internal structure, because members differ in how many common features they share (family resemblance). They sit in hierarchies with a knowledge-dependent basic level and within our wider theories of the world. Prototype and exemplar views are two ways of storing that overlap — a summary versus remembered examples — each with typical strengths and weaknesses; essentialism adds that beliefs about hidden causes can override surface similarity. Robinson-Riegler turns the same principle into an architecture. Similar concepts lie close together in a network, so activation spreads to related nodes: typical members reach their category fastest, and a prime gives related words a head start. Bozeat et al. provide the most striking confirmation. When semantic dementia degrades this single, amodal store, the distinctive features that separate a duck from a swan disappear first, while the shared, prototypical core survives and even intrudes — a duck with four legs. Typicality, the basic level, priming and the pattern of semantic loss are four faces of one principle: meaning is built from shared features, and what is shared is what is strongest.</p></section>
+<p class="sv-s" style="margin-top:30px">Sources: Murphy, G. (2021). Categories and concepts. NOBA · Robinson-Riegler, Networks and Concepts: The Classification Database, pp. 198–207 · Bozeat, S., et al. (2003). Cognitive Neuropsychology, 20(1), 27–47.</p>
+</div><script>
+(function(){"use strict";
+const NS="http://www.w3.org/2000/svg";const $=(s,r=document)=>r.querySelector(s);
+function el(t,a,x){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(x!=null)e.textContent=x;return e;}
+/* A3 scorecard */
+(function(){const R=[["No definitions (game, dog, planet)","✗✓✓✓"],["Typicality (Rosch, 1973)","✗✓✓±"],["Fuzzy boundaries (Hampton; M & G)","✗✓✓–"],["Formal concepts (triangle)","✓–––"],["Never-seen prototype (Posner)","–✓✗–"],["Learning from general statements","–✓✗–"],["Correlated features (small birds sing)","–✗✓±"],["Context (campfire instrument)","–✗✓–"],["“Pet fish” (combination)","–✗±–"],["Economy of storage","✓✓✗–"],["Rule overridden (Allen & Brooks)","✗✗✓–"],["Coherence & essence (donker, Keil, Rips)","✗✗✗✓"]];
+  const xs=[356,432,506,572],rows=$("#a3Rows"),cells=$("#a3Cells");
+  R.forEach((r,i)=>{const y=96+i*32;rows.appendChild(el("text",{x:20,y:y},r[0]));[...r[1]].forEach((c,j)=>cells.appendChild(el("text",{x:xs[j],y:y+1,fill:c==="✓"?"#2f8a57":c==="✗"?"#c0392b":c==="±"?"#a8854a":"#9aa0a8"},c)));
+    if(i<R.length-1)rows.appendChild(el("line",{x1:20,y1:y+12,x2:590,y2:y+12,stroke:"#f0ebe0"}));});})();
+
+/* A4 rows */
+(function(){const g=$("#a4Rows");const R=[["📏 Classical",70,70,"all members equal → ✗ cannot explain","#c0392b"],["⭐ Prototype",88,42,"distance to the prototype","#2f8a57"],["🗂️ Exemplar",90,36,"number of similar stored exemplars","#2f8a57"],["🕸️ Network",92,46,"length of the link to BIRD","#2f8a57"]];
+  R.forEach((r,i)=>{const y=70+i*74;g.appendChild(el("rect",{x:20,y:y,width:560,height:64,rx:12,fill:i?"#fff":"#f7e4e4",stroke:"#e8e1d3"}));g.appendChild(el("text",{x:34,y:y+24,class:"sv-b"},r[0]));g.appendChild(el("text",{x:34,y:y+46,class:"sv-s"},r[3]));
+    g.appendChild(el("text",{x:280,y:y+24,class:"sv-t"},"🐦"));g.appendChild(el("rect",{x:306,y:y+12,width:r[1]*2.6,height:14,rx:7,fill:"#2a7f8e"}));
+    g.appendChild(el("text",{x:280,y:y+50,class:"sv-t"},"🐧"));g.appendChild(el("rect",{x:306,y:y+38,width:r[2]*2.6,height:14,rx:7,fill:"#c9a96e"}));});})();
+
+/* B1 nodes + models */
+(function(){const Nd={Yellow:[150,92],Lemon:[300,84],Sun:[360,140],Canary:[80,150],Bird:[200,170],Pet:[40,215],Cat:[40,290],Robin:[130,220],Hawk:[270,250],Animal:[360,250],Breathes:[128,300],Flies:[200,320],Airplane:[320,330]};
+  const g=$("#b1Nodes");Object.entries(Nd).forEach(([k,[x,y]])=>{g.appendChild(el("ellipse",{cx:x,cy:y,rx:k.length*4.4+12,ry:15,fill:"#fff",stroke:"#34466b","stroke-width":2}));g.appendChild(el("text",{x:x,y:y+4,"text-anchor":"middle",class:"sv-t","font-weight":"700"},k));});
+  })();
+/* C1 bars + profile */
+(function(){const g=$("#c1Bars");[["DM",61],["MB",55],["KH",49],["GC",27],["JH",10],["FM",0]].forEach(([p,v],i)=>{const x=40+i*90;g.appendChild(el("text",{x:x,y:446,class:"sv-b"},p+" "+v));g.appendChild(el("rect",{x:x,y:454,width:70,height:14,rx:4,fill:"#f3f0ea"}));g.appendChild(el("rect",{x:x,y:454,width:Math.max(v/64*70,2),height:14,rx:4,fill:"#34466b"}));});
+  })();
+})();
+</script>
+</body></html>
